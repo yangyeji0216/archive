@@ -1,51 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CSV 갤러리</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>yejiyang</title>
 
-  <!-- 구운바탕 폰트 불러오기 -->
-  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_gowun/GowunBatang.woff2" rel="stylesheet">
+  <!-- Google Fonts: Poppins + Chiron Sung HK -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <style>
-    /* 전체 배경 & 폰트 */
     body {
       background-color: #f9d7f0;
-      font-family: 'Gowun Batang', sans-serif;
-      font-style: normal;
+      font-family: 'Poppins', sans-serif;
       font-weight: 400;
+      font-style: normal;
       margin: 0;
       padding: 20px;
     }
 
-    /* 그리드 레이아웃 */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
     }
 
-    /* 카드 스타일 */
     .card {
       display: flex;
+      flex-direction: row;
       background-color: white;
       border: 1px solid #ccc;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
     }
 
-    /* 이미지 영역 */
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
     .card img {
-      width: 120px; /* 왼쪽 이미지 너비 */
-      height: 120px;
+      flex: 0 0 120px; /* 기본 이미지 너비 */
+      height: auto;
       object-fit: cover;
-      flex-shrink: 0;
     }
 
-    /* 텍스트 영역 */
     .card .content {
+      flex: 1; /* 텍스트 영역 가변 폭 */
       padding: 12px;
       display: flex;
       flex-direction: column;
@@ -54,17 +57,52 @@
 
     .card .content h3 {
       margin: 0 0 4px;
-      font-size: 18px;
+      font-family: 'Chiron Sung HK', serif;
+      font-weight: 600;
+      font-size: 20px;
     }
 
-    .card .content p {
+    .card .content p.author {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-style: italic;
+      color: #555;
       margin: 2px 0;
-      font-size: 14px;
+    }
+
+    .card .content p.description {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-style: normal;
       color: #333;
+      margin: 2px 0;
+    }
+
+    /* 반응형 */
+    @media (max-width: 700px) {
+      .card img {
+        flex: 0 0 80px; /* 화면 작아지면 이미지 작게 */
+      }
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .card img {
+        width: 100%;
+        height: auto;
+      }
+      .card .content {
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
+
   <div id="gallery" class="grid"></div>
 
   <script>
@@ -93,8 +131,8 @@
           ${imageUrl ? `<img src="${imageUrl}" alt="${title}">` : ""}
           <div class="content">
             <h3>${title}</h3>
-            <p><em>${author}</em></p>
-            <p>${description || ""}</p>
+            <p class="author">${author}</p>
+            <p class="description">${description || ""}</p>
           </div>
         `;
 
@@ -104,5 +142,6 @@
 
     fetchAndRender();
   </script>
+
 </body>
 </html>
