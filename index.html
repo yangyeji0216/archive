@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>yejiyang</title>
+  <title>Yeji Yang</title>
 
   <!-- Google Fonts: Poppins + Chiron Sung HK -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,26 +14,31 @@
     body {
       background-color: #f9d7f0;
       font-family: 'Poppins', sans-serif;
-      font-weight: 400;
-      font-style: normal;
       margin: 0;
-      padding: 20px;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-family: 'Chiron Sung HK', serif;
+      font-weight: 700;
+      font-size: 36px;
+      text-align: center;
+      margin-bottom: 40px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: 1fr;
+      gap: 40px;
     }
 
     .card {
       display: flex;
-      flex-direction: row;
+      flex-direction: row-reverse; /* 이미지 오른쪽, 텍스트 왼쪽 */
       background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       transition: transform 0.2s;
     }
 
@@ -42,24 +47,24 @@
     }
 
     .card img {
-      flex: 0 0 120px; /* 기본 이미지 너비 */
+      flex: 0 0 200px; /* 이미지 너비 */
       height: auto;
       object-fit: cover;
     }
 
     .card .content {
-      flex: 1; /* 텍스트 영역 가변 폭 */
-      padding: 12px;
+      flex: 1;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
     .card .content h3 {
-      margin: 0 0 4px;
+      margin: 0 0 8px;
       font-family: 'Chiron Sung HK', serif;
       font-weight: 600;
-      font-size: 20px;
+      font-size: 22px;
     }
 
     .card .content p.author {
@@ -67,7 +72,7 @@
       font-weight: 500;
       font-style: italic;
       color: #555;
-      margin: 2px 0;
+      margin: 2px 0 6px;
     }
 
     .card .content p.description {
@@ -78,14 +83,8 @@
       margin: 2px 0;
     }
 
-    /* 반응형 */
-    @media (max-width: 700px) {
-      .card img {
-        flex: 0 0 80px; /* 화면 작아지면 이미지 작게 */
-      }
-    }
-
-    @media (max-width: 500px) {
+    /* 반응형: 작은 화면에서는 이미지 아래로 */
+    @media (max-width: 768px) {
       .card {
         flex-direction: column;
         align-items: center;
@@ -96,17 +95,18 @@
         height: auto;
       }
       .card .content {
-        padding: 10px;
+        padding: 15px;
       }
     }
   </style>
 </head>
 <body>
 
+  <h1>Yeji Yang</h1>
   <div id="gallery" class="grid"></div>
 
   <script>
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmfPbTuT_xUlST2CYK_ebQZ_B1Lf3OZKGGGErrQso7Dh_g3bn2nBrifBB7TKyEOvNweZ0fyV5jAPfI/pub?output=csv";
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS4zBjn2eG3u_Dh1ceUSKscDzNBLeFDZiOUJZgT1kTkOOw3f7q-_KMh5LDqHKQRpEPrnYiA1wUIc8Xc/pub?output=csv";
 
     async function fetchAndRender() {
       const res = await fetch(csvUrl);
