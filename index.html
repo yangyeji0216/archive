@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yeji Yang</title>
 
-  <!-- Google Fonts: Poppins + Chiron Sung HK -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
     }
 
     .card img {
-      flex: 0 0 200px; /* 이미지 너비 */
+      flex: 0 0 200px;
       height: auto;
       object-fit: cover;
     }
@@ -83,8 +83,13 @@
       margin: 2px 0;
     }
 
-    /* 반응형: 작은 화면에서는 이미지 아래로 */
     @media (max-width: 768px) {
+      .card img {
+        flex: 0 0 150px;
+      }
+    }
+
+    @media (max-width: 500px) {
       .card {
         flex-direction: column;
         align-items: center;
@@ -106,41 +111,46 @@
   <div id="gallery" class="grid"></div>
 
   <script>
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS4zBjn2eG3u_Dh1ceUSKscDzNBLeFDZiOUJZgT1kTkOOw3f7q-_KMh5LDqHKQRpEPrnYiA1wUIc8Xc/pub?output=csv";
+    // 여기에 갤러리 항목 추가
+    const galleryItems = [
+      {
+        title: "Artwork 1",
+        author: "Yeji Yang",
+        imageUrl: "images/art1.jpg", // 이미지 파일 경로
+        description: "첫 번째 작품 설명입니다."
+      },
+      {
+        title: "Artwork 2",
+        author: "Yeji Yang",
+        imageUrl: "images/art2.jpg",
+        description: "두 번째 작품 설명입니다."
+      },
+      {
+        title: "Artwork 3",
+        author: "Yeji Yang",
+        imageUrl: "images/art3.jpg",
+        description: "세 번째 작품 설명입니다."
+      }
+      // 원하는 만큼 항목 추가 가능
+    ];
 
-    async function fetchAndRender() {
-      const res = await fetch(csvUrl);
-      const text = await res.text();
+    const gallery = document.getElementById("gallery");
 
-      const rows = text.trim().split("\n").map(row => row.split(","));
-      const header = rows[0];
-      const dataRows = rows.slice(1);
+    galleryItems.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
 
-      const gallery = document.getElementById("gallery");
+      card.innerHTML = `
+        <img src="${item.imageUrl}" alt="${item.title}">
+        <div class="content">
+          <h3>${item.title}</h3>
+          <p class="author">${item.author}</p>
+          <p class="description">${item.description}</p>
+        </div>
+      `;
 
-      dataRows.forEach(row => {
-        const title = row[0];
-        const author = row[1];
-        const imageUrl = row[2];
-        const description = row[3];
-
-        const card = document.createElement("div");
-        card.className = "card";
-
-        card.innerHTML = `
-          ${imageUrl ? `<img src="${imageUrl}" alt="${title}">` : ""}
-          <div class="content">
-            <h3>${title}</h3>
-            <p class="author">${author}</p>
-            <p class="description">${description || ""}</p>
-          </div>
-        `;
-
-        gallery.appendChild(card);
-      });
-    }
-
-    fetchAndRender();
+      gallery.appendChild(card);
+    });
   </script>
 
 </body>
