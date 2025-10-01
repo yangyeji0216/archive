@@ -13,11 +13,10 @@
   <style>
     :root{
       --bg: #f6cee8;
-      --left-w: 380px;
+      --left-w: 380px; /* 데스크탑 왼쪽 너비 */
       --accent: #e3a6d1;
       --muted: #666;
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -30,73 +29,92 @@
       -moz-osx-font-smoothing:grayscale;
     }
 
+    /* 전체 레이아웃: 좌우 분할 */
     .layout {
       display:flex;
       min-height:100vh;
       gap:0;
     }
 
+    /* 왼쪽 텍스트 영역 */
     .panel-left{
       width:var(--left-w);
       min-width:260px;
       background:transparent;
-      padding:20px;
+      padding:0px 0px;
       overflow:auto;
       border-right: 1px solid rgba(0,0,0,0.04);
     }
     .brand {
       font-family: "Chiron Sung HK", serif;
       font-weight:700;
-      font-size:18px;
-      margin:0 0 10px 0;
+      font-size:16px;
+      margin:0 0 18px 0;
       letter-spacing:0.6px;
     }
     .subtitle {
       font-family: "Chiron Sung HK", serif;
-      margin:0 0 10px 0;
+      margin:0 0 22px 0;
       color:var(--muted);
       font-size:16px;
     }
-
     .list {
       font-family: "Chiron Sung HK", serif;
       display:flex;
       flex-direction:column;
       gap:0px;
     }
-
     .list-item{
       font-family: "Chiron Sung HK", serif;
-      padding:0px 0;
+      padding:0px 0px;
+      border-radius:8px;
       cursor:pointer;
+      transition: background 0.15s, transform 0.12s;
       display:block;
       text-decoration:none;
       color:inherit;
-      transition: transform 0.12s;
     }
-    .list-item:hover{ transform: translateY(-2px); }
-    .list-item.active{ font-weight:600; }
+    .list-item:hover{
+      background: rgba(0,0,0,0.03);
+      transform: translateY(-2px);
+    }
+    .list-item.active{
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+      padding-left:0px;
+    }
+    .list-item .title {
+      font-family: "Chiron Sung HK", serif;
+      font-size:16px;
+      margin:0 0 6px 0;
+    }
+    .list-item .meta {
+      font-size:16px;
+      color:var(--muted);
+      margin:0;
+    }
+    .list-item .desc {
+      margin-top:8px;
+      font-size:16px;
+      color:#222;
+      line-height:1.45;
+    }
 
-    .list-item .title { font-size:16px; margin:0 0 4px 0; }
-    .list-item .meta { font-size:14px; color:var(--muted); margin:0; }
-    .list-item .desc { font-size:14px; color:#222; margin-top:4px; line-height:1.4; }
-
+    /* 오른쪽 이미지 영역 */
     .panel-right{
       flex:1;
       overflow:auto;
       background:transparent;
       display:flex;
       flex-direction:column;
+      gap:0;
     }
-
     .image-slot{
       position:relative;
-      min-height:60vh;
+      min-height:40vh;
       display:block;
       background:#eee;
       overflow:hidden;
     }
-
     .image-slot img{
       width:100%;
       height:100%;
@@ -106,56 +124,65 @@
       transition: transform 0.6s ease, opacity 0.5s ease;
     }
 
-    /* Hover overlay caption */
+    /* 이미지 설명 캡션 (hover 시 나타남) */
     .image-caption{
       position:absolute;
-      inset:0;
-      background:rgba(0,0,0,0.55);
+      left:0;
+      bottom:0;
+      width:100%;
+      background:rgba(0,0,0,0.6);
       color:white;
       font-family:"Chiron Sung HK", serif;
-      font-size:12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:20px;
+      font-size:16px;
+      padding:12px 16px;
       opacity:0;
-      transition:opacity 0.4s ease;
-      line-height:1.5;
+      transition:opacity 0.3s ease;
     }
-    .image-slot:hover .image-caption{ opacity:1; }
+    .image-slot:hover .image-caption{
+      opacity:1;
+    }
 
+    /* 데스크탑: 선택된 이미지 약간 확대 */
+    .image-slot.active img{
+      transform: scale(1.03);
+      opacity:1;
+    }
+
+    /* 모바일/태블릿 반응형 */
     @media (max-width: 900px){
       .layout{flex-direction:column;}
       .panel-left{
         width:100%;
-        border-right:none;
+        min-width:unset;
+        border-right: none;
         border-top:1px solid rgba(0,0,0,0.04);
       }
       .panel-right{order:1}
       .panel-left{order:0}
-      .brand{text-align:center}
+      .image-slot{min-height:40vh}
+      .brand{ text-align:center }
     }
 
-    .panel-left::-webkit-scrollbar,
-    .panel-right::-webkit-scrollbar { width:8px; height:8px; }
-    .panel-left::-webkit-scrollbar-thumb,
-    .panel-right::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.08); border-radius:4px; }
+    /* 스크롤바 최소 스타일 */
+    .panel-left::-webkit-scrollbar, .panel-right::-webkit-scrollbar { width:8px; height:8px; }
+    .panel-left::-webkit-scrollbar-thumb, .panel-right::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.08); border-radius:4px; }
   </style>
 </head>
 <body>
-
   <div class="layout">
+    <!-- LEFT: 텍스트 목록 -->
     <aside class="panel-left" id="left">
       <h1 class="brand">Yeji Yang</h1>
-      <p class="subtitle">works & notes</p>
+      <p class="subtitle">works & notes — click an item to view its image on the right</p>
       <nav class="list" id="list"></nav>
     </aside>
 
+    <!-- RIGHT: 이미지 영역 -->
     <main class="panel-right" id="right"></main>
   </div>
 
   <script>
+    // ====== 콘텐츠 직접 추가 ======
     const galleryItems = [
       {
         title: "Quiet Gesture",
@@ -176,11 +203,14 @@
         imageUrl: "images/art3.jpg"
       }
     ];
+    // =================================
 
     const listEl = document.getElementById('list');
     const rightEl = document.getElementById('right');
 
+    // 렌더링
     galleryItems.forEach((item, idx) => {
+      // LEFT
       const li = document.createElement('a');
       li.href = `#img-${idx}`;
       li.className = 'list-item';
@@ -192,37 +222,73 @@
       `;
       listEl.appendChild(li);
 
+      // RIGHT
       const slot = document.createElement('section');
       slot.className = 'image-slot';
       slot.id = `img-${idx}`;
       slot.innerHTML = `
         <img src="${item.imageUrl}" alt="${item.title}">
         <div class="image-caption">
-          <div>
-            <strong>${item.title}</strong><br><br>
-            ${item.description}
-          </div>
+          <strong>${item.title}</strong><br>
+          ${item.description}
         </div>
       `;
       rightEl.appendChild(slot);
     });
 
+    // 선택/하이라이트 로직
     const listItems = Array.from(document.querySelectorAll('.list-item'));
     const imageSlots = Array.from(document.querySelectorAll('.image-slot'));
 
-    function setActive(i){
+    function setActive(i, options = { scrollIntoView:true }){
       listItems.forEach((el, idx) => el.classList.toggle('active', idx===i));
+      imageSlots.forEach((el, idx) => el.classList.toggle('active', idx===i));
+      if(options.scrollIntoView){
+        const target = document.getElementById(`img-${i}`);
+        if(target){
+          target.scrollIntoView({behavior:'smooth', block:'center'});
+        }
+      }
     }
 
-    if(galleryItems.length>0) setActive(0);
+    if(galleryItems.length>0) setActive(0, {scrollIntoView:false});
 
     listEl.addEventListener('click', (e) => {
       const a = e.target.closest('.list-item');
       if(!a) return;
       e.preventDefault();
       const i = Number(a.dataset.index);
-      setActive(i);
-      document.getElementById(`img-${i}`).scrollIntoView({behavior:'smooth', block:'center'});
+      setActive(i, {scrollIntoView:true});
+    });
+
+    // 오른쪽 스크롤 시 동기화
+    let scrollTimeout = null;
+    rightEl.addEventListener('scroll', () => {
+      if(scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const rectRight = rightEl.getBoundingClientRect();
+        const centerY = rectRight.top + rectRight.height/2;
+        let bestIdx = 0;
+        let bestDist = Infinity;
+        imageSlots.forEach((slot, idx) => {
+          const r = slot.getBoundingClientRect();
+          const d = Math.abs((r.top + r.bottom)/2 - centerY);
+          if(d < bestDist){
+            bestDist = d;
+            bestIdx = idx;
+          }
+        });
+        setActive(bestIdx, {scrollIntoView:false});
+      }, 80);
+    });
+
+    // 이미지 로딩 실패 대비
+    imageSlots.forEach(slot=>{
+      const img = slot.querySelector('img');
+      img.addEventListener('error', () => {
+        slot.style.background = 'linear-gradient(135deg, #ddd, #bbb)';
+        img.style.display = 'none';
+      });
     });
   </script>
 </body>
