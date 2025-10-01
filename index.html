@@ -5,129 +5,183 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Yeji Yang</title>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Poppins + Chiron Sung HK -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Poppins:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <style>
-    :root {
+    :root{
       --bg: #f6cee8;
+      --left-w: 380px; /* 데스크탑 왼쪽 너비 */
       --accent: #e3a6d1;
       --muted: #666;
     }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body {
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100%;
       font-family: "Poppins", sans-serif;
-      background: var(--bg);
+      background:var(--bg);
       color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
+    /* 전체 레이아웃: 좌우 분할 */
     .layout {
       display:flex;
       min-height:100vh;
+      gap:0;
     }
 
-    /* 왼쪽 영역 */
-    .panel-left {
-      width: 320px;
-      min-width: 240px;
-      border-right: 1px solid rgba(0,0,0,0.08);
-      padding:20px;
+    /* 왼쪽 텍스트 영역 */
+    .panel-left{
+      width:var(--left-w);
+      min-width:260px;
+      background:transparent;
+      padding:0px 0px;
       overflow:auto;
+      border-right: 1px solid rgba(0,0,0,0.04);
     }
     .brand {
       font-family: "Chiron Sung HK", serif;
       font-weight:700;
-      font-size:18px;
-      margin-bottom:10px;
+      font-size:16px;
+      margin:0 0 18px 0;
+      letter-spacing:0.6px;
     }
     .subtitle {
-      color: var(--muted);
-      margin-bottom: 20px;
+      font-family: "Chiron Sung HK", serif;
+      margin:0 0 22px 0;
+      color:var(--muted);
+      font-size:16px;
     }
-    .list { display:flex; flex-direction:column; gap:14px; }
-    .list-item {
+    .list {
+      font-family: "Chiron Sung HK", serif;
+      display:flex;
+      flex-direction:column;
+      gap:0px;
+    }
+    .list-item{
+      font-family: "Chiron Sung HK", serif;
+      padding:0px 0px;
+      border-radius:8px;
+      cursor:pointer;
+      transition: background 0.15s, transform 0.12s;
+      display:block;
       text-decoration:none;
       color:inherit;
-      padding:6px 4px;
-      border-radius:6px;
-      transition: background 0.2s;
-      display:block;
     }
-    .list-item:hover { background: rgba(0,0,0,0.05); }
-    .title { font-family:"Chiron Sung HK", serif; font-size:16px; font-weight:600; }
-    .meta { font-size:14px; color: var(--muted); }
-    .desc { font-size:14px; margin-top:4px; line-height:1.4; }
+    .list-item:hover{
+      background: rgba(0,0,0,0.03);
+      transform: translateY(-2px);
+    }
+    .list-item.active{
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+      padding-left:10px;
+    }
+    .list-item .title {
+      font-family: "Chiron Sung HK", serif;
+      font-size:16px;
+      margin:0 0 6px 0;
+    }
+    .list-item .meta {
+      font-size:16px;
+      color:var(--muted);
+      margin:0;
+    }
+    .list-item .desc {
+      margin-top:8px;
+      font-size:16px;
+      color:#222;
+      line-height:1.45;
+    }
 
-    /* 오른쪽 영역: 랜덤 그리드 */
-    .panel-right {
+    /* 오른쪽 이미지 영역 */
+    .panel-right{
       flex:1;
-      padding:16px;
-      display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      grid-auto-rows: 8px; /* 행 높이 단위 */
-      gap:16px;
       overflow:auto;
+      background:transparent;
+      display:flex;
+      flex-direction:column;
+      gap:0;
     }
-    .image-slot {
+    .image-slot{
       position:relative;
-      overflow:hidden;
-      border-radius:8px;
+      min-height:40vh;
+      display:block;
       background:#eee;
+      overflow:hidden;
     }
-    .image-slot img {
+    .image-slot img{
       width:100%;
       height:100%;
       object-fit:cover;
       display:block;
-      transition: transform 0.4s;
-    }
-    .image-slot:hover img {
-      transform: scale(1.05);
+      transform-origin:center center;
+      transition: transform 0.6s ease, opacity 0.5s ease;
+      cursor: pointer;
     }
 
-    /* hover caption */
-    .caption {
-      position:absolute;
-      left:0; right:0; bottom:0;
-      background:rgba(0,0,0,0.6);
-      color:white;
-      padding:10px;
-      font-size:14px;
-      opacity:0;
-      transition:opacity 0.3s;
-    }
-    .caption .caption-title {
-      font-weight:600;
-      margin-bottom:4px;
-    }
-    .image-slot:hover .caption {
+    /* 데스크탑: 선택된 이미지 약간 확대 */
+    .image-slot.active img{
+      transform: scale(1.03);
       opacity:1;
     }
 
-    /* 반응형 */
+    /* 마우스 따라다니는 툴팁 */
+    .tooltip {
+      position: fixed;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: "Chiron Sung HK", serif;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 9999;
+      max-width: 280px;
+      line-height: 1.4;
+    }
+
+    /* 모바일/태블릿 반응형 */
     @media (max-width: 900px){
-      .layout { flex-direction:column; }
-      .panel-left { width:100%; border-right:none; border-bottom:1px solid rgba(0,0,0,0.08); }
+      .layout{flex-direction:column;}
+      .panel-left{
+        width:100%;
+        min-width:unset;
+        border-right: none;
+        border-top:1px solid rgba(0,0,0,0.04);
+      }
+      .panel-right{order:1}
+      .panel-left{order:0}
+      .image-slot{min-height:40vh}
+      .brand{ text-align:center }
     }
   </style>
 </head>
 <body>
   <div class="layout">
-    <!-- LEFT -->
-    <aside class="panel-left">
+    <!-- LEFT: 텍스트 목록 -->
+    <aside class="panel-left" id="left">
       <h1 class="brand">Yeji Yang</h1>
       <p class="subtitle">works & notes — click an item to view its image on the right</p>
       <nav class="list" id="list"></nav>
     </aside>
 
-    <!-- RIGHT -->
+    <!-- RIGHT: 이미지 영역 -->
     <main class="panel-right" id="right"></main>
   </div>
 
+  <!-- Tooltip element -->
+  <div class="tooltip" id="tooltip"></div>
+
   <script>
-    // ====== 작품 데이터 ======
+    // ====== 콘텐츠 직접 추가 ======
     const galleryItems = [
       {
         title: "Quiet Gesture",
@@ -146,18 +200,13 @@
         author: "Yeji Yang",
         description: "A delicate mapping of footsteps and time.",
         imageUrl: "images/3.jpg"
-      },
-      {
-        title: "Memory Dust",
-        author: "Yeji Yang",
-        description: "Fragments of recollection scattered in air.",
-        imageUrl: "images/4.jpg"
       }
     ];
-    // ==========================
+    // =================================
 
     const listEl = document.getElementById('list');
     const rightEl = document.getElementById('right');
+    const tooltip = document.getElementById('tooltip');
 
     // 렌더링
     galleryItems.forEach((item, idx) => {
@@ -165,6 +214,7 @@
       const li = document.createElement('a');
       li.href = `#img-${idx}`;
       li.className = 'list-item';
+      li.dataset.index = idx;
       li.innerHTML = `
         <div class="title">${item.title}</div>
         <div class="meta">${item.author}</div>
@@ -173,31 +223,90 @@
       listEl.appendChild(li);
 
       // RIGHT
-      const slot = document.createElement('div');
+      const slot = document.createElement('section');
       slot.className = 'image-slot';
       slot.id = `img-${idx}`;
       slot.innerHTML = `
-        <img src="${item.imageUrl}" alt="${item.title}">
-        <div class="caption">
-          <div class="caption-title">${item.title}</div>
-          <div class="caption-desc">${item.description}</div>
-        </div>
+        <img src="${item.imageUrl}" alt="${item.title}" 
+             data-caption="<strong>${item.title}</strong><br>${item.description}">
       `;
       rightEl.appendChild(slot);
     });
 
-    // 랜덤 크기 부여
-    function randomizeGrid(){
-      const slots = document.querySelectorAll('.image-slot');
-      slots.forEach(slot => {
-        const rowSpan = Math.floor(Math.random() * 25) + 20; // 20~45행 차지
-        const colSpan = Math.random() > 0.7 ? 2 : 1; // 가끔 2칸 차지
-        slot.style.gridRowEnd = `span ${rowSpan}`;
-        slot.style.gridColumn = `span ${colSpan}`;
-      });
+    // 선택/하이라이트 로직
+    const listItems = Array.from(document.querySelectorAll('.list-item'));
+    const imageSlots = Array.from(document.querySelectorAll('.image-slot'));
+
+    function setActive(i, options = { scrollIntoView:true }){
+      listItems.forEach((el, idx) => el.classList.toggle('active', idx===i));
+      imageSlots.forEach((el, idx) => el.classList.toggle('active', idx===i));
+      if(options.scrollIntoView){
+        const target = document.getElementById(`img-${i}`);
+        if(target){
+          target.scrollIntoView({behavior:'smooth', block:'center'});
+        }
+      }
     }
 
-    randomizeGrid(); // 최초 실행
+    if(galleryItems.length>0) setActive(0, {scrollIntoView:false});
+
+    listEl.addEventListener('click', (e) => {
+      const a = e.target.closest('.list-item');
+      if(!a) return;
+      e.preventDefault();
+      const i = Number(a.dataset.index);
+      setActive(i, {scrollIntoView:true});
+    });
+
+    // 오른쪽 스크롤 시 동기화
+    let scrollTimeout = null;
+    rightEl.addEventListener('scroll', () => {
+      if(scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const rectRight = rightEl.getBoundingClientRect();
+        const centerY = rectRight.top + rectRight.height/2;
+        let bestIdx = 0;
+        let bestDist = Infinity;
+        imageSlots.forEach((slot, idx) => {
+          const r = slot.getBoundingClientRect();
+          const d = Math.abs((r.top + r.bottom)/2 - centerY);
+          if(d < bestDist){
+            bestDist = d;
+            bestIdx = idx;
+          }
+        });
+        setActive(bestIdx, {scrollIntoView:false});
+      }, 80);
+    });
+
+    // 이미지 툴팁 이벤트
+    imageSlots.forEach(slot => {
+      const img = slot.querySelector('img[data-caption]');
+      if (!img) return;
+
+      img.addEventListener('mouseenter', () => {
+        tooltip.innerHTML = img.dataset.caption;
+        tooltip.style.opacity = 1;
+      });
+
+      img.addEventListener('mousemove', (e) => {
+        tooltip.style.left = e.clientX + 15 + 'px';
+        tooltip.style.top = e.clientY + 15 + 'px';
+      });
+
+      img.addEventListener('mouseleave', () => {
+        tooltip.style.opacity = 0;
+      });
+    });
+
+    // 이미지 로딩 실패 대비
+    imageSlots.forEach(slot=>{
+      const img = slot.querySelector('img');
+      img.addEventListener('error', () => {
+        slot.style.background = 'linear-gradient(135deg, #ddd, #bbb)';
+        img.style.display = 'none';
+      });
+    });
   </script>
 </body>
 </html>
