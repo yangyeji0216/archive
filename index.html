@@ -131,22 +131,26 @@
       opacity:1;
     }
 
-    /* 마우스 따라다니는 툴팁 */
-    .tooltip {
-      position: fixed;
-      background: rgba(0,0,0,0.75);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-family: "Chiron Sung HK", serif;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      z-index: 999;
-      max-width: 280px;
-      line-height: 1.4;
-    }
+  /*이미지 툴팁 이벤트*/
+imageSlots.forEach(slot => {
+  const img = slot.querySelector('img[data-caption]');
+  if (!img) return;
+
+  img.addEventListener('mouseenter', (e) => {
+    tooltip.innerHTML = img.dataset.caption;
+    tooltip.style.opacity = 1;
+  });
+
+  img.addEventListener('mousemove', (e) => {
+    tooltip.style.left = e.pageX + 15 + 'px';
+    tooltip.style.top = e.pageY + 15 + 'px';
+  });
+
+  img.addEventListener('mouseleave', () => {
+    tooltip.style.opacity = 0;
+  });
+});
+
 
     /* 모바일/태블릿 반응형 */
     @media (max-width: 900px){
