@@ -1,296 +1,95 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yeji Yang</title>
 
-  <!-- Google Fonts: Poppins + Chiron Sung HK -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg: #f6cee8;
-      --left-w: 380px; /* 데스크탑 왼쪽 너비 */
-      --accent: #e3a6d1;
-      --muted: #666;
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      min-height:100%;
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f9d7f0;
       font-family: "Poppins", sans-serif;
-      background:var(--bg);
-      color:#111;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      font-weight: 400;
+      font-style: normal;
+      display: flex;
+      min-height: 100vh;
     }
 
-    /* 전체 레이아웃: 좌우 분할 */
-    .layout {
-      display:flex;
-      min-height:100vh;
-      gap:0;
+    .left {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
     }
 
-    /* 왼쪽 텍스트 영역 */
-    .panel-left{
-      width:var(--left-w);
-      min-width:260px;
-      background:transparent;
-      padding:0px 0px;
-      overflow:auto;
-      border-right: 1px solid rgba(0,0,0,0.04);
+    .right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
-    .brand {
+
+    .right img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    h1 {
       font-family: "Chiron Sung HK", serif;
-      font-weight:700;
-      font-size:16px;
-      margin:0 0 18px 0;
-      letter-spacing:0.6px;
-    }
-    .subtitle {
-      font-family: "Chiron Sung HK", serif;
-      margin:0 0 22px 0;
-      color:var(--muted);
-      font-size:16px;
+      font-weight: 600;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
     }
 
-    .list {
-      font-family: "Chiron Sung HK", serif;
-      display:flex;
-      flex-direction:column;
-      gap:0px;
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
     }
 
-    .list-item{
-      font-family: "Chiron Sung HK", serif;
-      padding:0px 0px;
-      border-radius:8px;
-      cursor:pointer;
-      transition: background 0.15s, transform 0.12s;
-      display:block;
-      text-decoration:none;
-      color:inherit;
-    }
-    .list-item:hover{ background: rgba(0,0,0,0.03); transform: translateY(-2px); }
-    .list-item.active{
-      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-      padding-left:0px;
-    }
-
-    .list-item .title {
-      font-family: "Chiron Sung HK", serif;
-      font-size:16px;
-      margin:0 0 6px 0;
-    }
-    .list-item .meta {
-      font-size:16px;
-      color:var(--muted);
-      margin:0;
-    }
-    .list-item .desc {
-      margin-top:8px;
-      font-size:16px;
-      color:#222;
-      line-height:1.45;
-    }
-
-    /* 오른쪽 이미지 영역 */
-    .panel-right{
-      flex:1;
-      overflow:auto;
-      background:transparent;
-      display:flex;
-      flex-direction:column;
-      gap:0;
-    }
-
-    .image-slot{
-      position:relative;
-      min-height:40vh; /* 각 이미지 블록 높이 — 필요에 따라 조정 */
-      display:block;
-      background:#eee;
-      overflow:hidden;
-    }
-
-    .image-slot img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      transform-origin:center center;
-      transition: transform 0.6s ease, opacity 0.5s ease;
-    }
-
-    /* 이미지 오버레이 (작은 제목 표시 등) - 숨김 처리 기본 */
-    .image-caption{
-      position:absolute;
-      left:24px;
-      bottom:24px;
-      color:white;
-      font-family:"Chiron Sung HK", serif;
-      font-size:16px;
-      padding:6px 12px;
-      border-radius:6px;
-      display:inline-block;
-    }
-
-    /* 데스크탑: 선택된 이미지 약간 확대 */
-    .image-slot.active img{
-      transform: scale(1.03);
-      opacity:1;
-    }
-
-    /* 모바일/태블릿 반응형: 세로 스택 — 이미지 먼저, 그 다음 텍스트(왼쪽 영역이 아래로) */
-    @media (max-width: 900px){
-      .layout{flex-direction:column;}
-      .panel-left{
-        width:100%;
-        min-width:unset;
-        border-right: none;
-        border-top:1px solid rgba(0,0,0,0.04);
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
       }
-      .panel-right{order:1}
-      .panel-left{order:0}
-      .image-slot{min-height:40vh}
-      .brand{ text-align:center }
+      .left, .right {
+        flex: unset;
+        width: 100%;
+        height: auto;
+      }
+      .right {
+        padding: 20px;
+      }
     }
-
-    /* 접근성/스크롤바 최소 스타일 (선택) */
-    .panel-left::-webkit-scrollbar, .panel-right::-webkit-scrollbar { width:8px; height:8px; }
-    .panel-left::-webkit-scrollbar-thumb, .panel-right::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.08); border-radius:4px; }
   </style>
 </head>
 <body>
-
-  <div class="layout">
-    <!-- LEFT: 텍스트 목록 -->
-    <aside class="panel-left" id="left">
-      <h1 class="brand">Yeji Yang</h1>
-      <p class="subtitle">works & notes — click an item to view its image on the right</p>
-
-      <nav class="list" id="list"></nav>
-    </aside>
-
-    <!-- RIGHT: 이미지 영역 (각 항목별 이미지 블록) -->
-    <main class="panel-right" id="right"></main>
+  <div class="left">
+    <h1>Yeji Yang</h1>
+    <p>
+      Welcome to my website.  
+      This is a place where I share my projects, writings, and explorations in design and art.  
+      The text is aligned on the left, while images are displayed on the right for clarity and focus.
+    </p>
+    <p>
+      Using a combination of <strong>Poppins</strong> and <strong>Chiron Sung HK</strong>,  
+      the typography aims to balance modern readability with subtle character.
+    </p>
+    <p>
+      Feel free to scroll, browse, and engage with the content.  
+      The site is kept minimal so that words and images can speak directly.
+    </p>
   </div>
 
-  <script>
-    // ====== 여기에 콘텐츠를 직접 추가하세요 ======
-    // title, author, description, imageUrl
-    const galleryItems = [
-      {
-        title: "Quiet Gesture",
-        author: "Yeji Yang",
-        description: "A study in motion and residue. Performed with music and flour.",
-        imageUrl: "images/art1.jpg"
-      },
-      {
-        title: "Light Thread",
-        author: "Yeji Yang",
-        description: "Long exposure experiments capturing light as line.",
-        imageUrl: "images/art2.jpg"
-      },
-      {
-        title: "Trace of Breath",
-        author: "Yeji Yang",
-        description: "A delicate mapping of footsteps and time.",
-        imageUrl: "images/art3.jpg"
-      }
-      // 필요하면 항목 추가
-    ];
-    // ===========================================
-
-    const listEl = document.getElementById('list');
-    const rightEl = document.getElementById('right');
-
-    // 렌더링: 왼쪽 목록과 오른쪽 이미지 블록 생성
-    galleryItems.forEach((item, idx) => {
-      // LEFT: 목록 아이템
-      const li = document.createElement('a');
-      li.href = `#img-${idx}`;
-      li.className = 'list-item';
-      li.dataset.index = idx;
-      li.innerHTML = `
-        <div class="title">${item.title}</div>
-        <div class="meta">${item.author}</div>
-        <div class="desc">${item.description}</div>
-      `;
-      listEl.appendChild(li);
-
-      // RIGHT: 이미지 슬롯
-      const slot = document.createElement('section');
-      slot.className = 'image-slot';
-      slot.id = `img-${idx}`;
-      slot.innerHTML = `
-        <img src="${item.imageUrl}" alt="${item.title}">
-        <div class="image-caption">${item.title}</div>
-      `;
-      rightEl.appendChild(slot);
-    });
-
-    // 선택/하이라이트 로직
-    const listItems = Array.from(document.querySelectorAll('.list-item'));
-    const imageSlots = Array.from(document.querySelectorAll('.image-slot'));
-
-    function setActive(i, options = { scrollIntoView:true }){
-      listItems.forEach((el, idx) => el.classList.toggle('active', idx===i));
-      imageSlots.forEach((el, idx) => el.classList.toggle('active', idx===i));
-      if(options.scrollIntoView){
-        // 오른쪽의 해당 이미지 블록으로 부드럽게 스크롤
-        const target = document.getElementById(`img-${i}`);
-        if(target){
-          target.scrollIntoView({behavior:'smooth', block:'center'});
-        }
-      }
-    }
-
-    // 초기 활성화: 첫 아이템
-    if(galleryItems.length>0) setActive(0, {scrollIntoView:false});
-
-    // 클릭 이벤트: 왼쪽 항목 클릭 시 오른쪽으로 스크롤 + 강조
-    listEl.addEventListener('click', (e) => {
-      const a = e.target.closest('.list-item');
-      if(!a) return;
-      e.preventDefault();
-      const i = Number(a.dataset.index);
-      setActive(i, {scrollIntoView:true});
-    });
-
-    // 오른쪽 스크롤 시 해당 이미지가 중앙에 보이면 왼쪽 항목 강조 (선택 동기화)
-    let scrollTimeout = null;
-    rightEl.addEventListener('scroll', () => {
-      if(scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        // find slot closest to center of rightEl viewport
-        const rectRight = rightEl.getBoundingClientRect();
-        const centerY = rectRight.top + rectRight.height/2;
-        let bestIdx = 0;
-        let bestDist = Infinity;
-        imageSlots.forEach((slot, idx) => {
-          const r = slot.getBoundingClientRect();
-          const d = Math.abs((r.top + r.bottom)/2 - centerY);
-          if(d < bestDist){ bestDist = d; bestIdx = idx; }
-        });
-        setActive(bestIdx, {scrollIntoView:false});
-      }, 80);
-    });
-
-    // 이미지 로딩 실패 대비: 대체 스타일
-    imageSlots.forEach(slot=>{
-      const img = slot.querySelector('img');
-      img.addEventListener('error', () => {
-        slot.style.background = 'linear-gradient(135deg, #ddd, #bbb)';
-        img.style.display = 'none';
-      });
-    });
-
-  </script>
+  <div class="right">
+    <img src="your-image.jpg" alt="Sample Image">
+  </div>
 </body>
 </html>
