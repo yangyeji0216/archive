@@ -1,95 +1,229 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Yeji Yang</title>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Google Fonts: Poppins + Chiron Sung HK -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #f9d7f0;
+    :root{
+      --bg: #f6cee8;
+      --left-w: 380px;
+      --accent: #e3a6d1;
+      --muted: #666;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100%;
       font-family: "Poppins", sans-serif;
-      font-weight: 400;
-      font-style: normal;
-      display: flex;
-      min-height: 100vh;
+      background:var(--bg);
+      color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
-    .left {
-      flex: 1;
-      padding: 40px;
-      overflow-y: auto;
+    .layout {
+      display:flex;
+      min-height:100vh;
+      gap:0;
     }
 
-    .right {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    .panel-left{
+      width:var(--left-w);
+      min-width:260px;
+      background:transparent;
+      padding:20px;
+      overflow:auto;
+      border-right: 1px solid rgba(0,0,0,0.04);
     }
-
-    .right img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    h1 {
+    .brand {
       font-family: "Chiron Sung HK", serif;
-      font-weight: 600;
-      font-size: 2.5rem;
-      margin-bottom: 20px;
+      font-weight:700;
+      font-size:18px;
+      margin:0 0 10px 0;
+      letter-spacing:0.6px;
+    }
+    .subtitle {
+      font-family: "Chiron Sung HK", serif;
+      margin:0 0 10px 0;
+      color:var(--muted);
+      font-size:16px;
     }
 
-    p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
+    .list {
+      font-family: "Chiron Sung HK", serif;
+      display:flex;
+      flex-direction:column;
+      gap:0px;
     }
 
-    @media (max-width: 900px) {
-      body {
-        flex-direction: column;
-      }
-      .left, .right {
-        flex: unset;
-        width: 100%;
-        height: auto;
-      }
-      .right {
-        padding: 20px;
-      }
+    .list-item{
+      font-family: "Chiron Sung HK", serif;
+      padding:0px 0;
+      cursor:pointer;
+      display:block;
+      text-decoration:none;
+      color:inherit;
+      transition: transform 0.12s;
     }
+    .list-item:hover{ transform: translateY(-2px); }
+    .list-item.active{ font-weight:600; }
+
+    .list-item .title { font-size:16px; margin:0 0 4px 0; }
+    .list-item .meta { font-size:14px; color:var(--muted); margin:0; }
+    .list-item .desc { font-size:14px; color:#222; margin-top:4px; line-height:1.4; }
+
+    .panel-right{
+      flex:1;
+      overflow:auto;
+      background:transparent;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .image-slot{
+      position:relative;
+      min-height:60vh;
+      display:block;
+      background:#eee;
+      overflow:hidden;
+    }
+
+    .image-slot img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transform-origin:center center;
+      transition: transform 0.6s ease, opacity 0.5s ease;
+    }
+
+    /* Hover overlay caption */
+    .image-caption{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,0.55);
+      color:white;
+      font-family:"Chiron Sung HK", serif;
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:20px;
+      opacity:0;
+      transition:opacity 0.4s ease;
+      line-height:1.5;
+    }
+    .image-slot:hover .image-caption{ opacity:1; }
+
+    @media (max-width: 900px){
+      .layout{flex-direction:column;}
+      .panel-left{
+        width:100%;
+        border-right:none;
+        border-top:1px solid rgba(0,0,0,0.04);
+      }
+      .panel-right{order:1}
+      .panel-left{order:0}
+      .brand{text-align:center}
+    }
+
+    .panel-left::-webkit-scrollbar,
+    .panel-right::-webkit-scrollbar { width:8px; height:8px; }
+    .panel-left::-webkit-scrollbar-thumb,
+    .panel-right::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.08); border-radius:4px; }
   </style>
 </head>
 <body>
-  <div class="left">
-    <h1>Yeji Yang</h1>
-    <p>
-      Welcome to my website.  
-      This is a place where I share my projects, writings, and explorations in design and art.  
-      The text is aligned on the left, while images are displayed on the right for clarity and focus.
-    </p>
-    <p>
-      Using a combination of <strong>Poppins</strong> and <strong>Chiron Sung HK</strong>,  
-      the typography aims to balance modern readability with subtle character.
-    </p>
-    <p>
-      Feel free to scroll, browse, and engage with the content.  
-      The site is kept minimal so that words and images can speak directly.
-    </p>
+
+  <div class="layout">
+    <aside class="panel-left" id="left">
+      <h1 class="brand">Yeji Yang</h1>
+      <p class="subtitle">works & notes</p>
+      <nav class="list" id="list"></nav>
+    </aside>
+
+    <main class="panel-right" id="right"></main>
   </div>
 
-  <div class="right">
-    <img src="your-image.jpg" alt="Sample Image">
-  </div>
+  <script>
+    const galleryItems = [
+      {
+        title: "Quiet Gesture",
+        author: "Yeji Yang",
+        description: "A study in motion and residue. Performed with music and flour.",
+        imageUrl: "images/art1.jpg"
+      },
+      {
+        title: "Light Thread",
+        author: "Yeji Yang",
+        description: "Long exposure experiments capturing light as line.",
+        imageUrl: "images/art2.jpg"
+      },
+      {
+        title: "Trace of Breath",
+        author: "Yeji Yang",
+        description: "A delicate mapping of footsteps and time.",
+        imageUrl: "images/art3.jpg"
+      }
+    ];
+
+    const listEl = document.getElementById('list');
+    const rightEl = document.getElementById('right');
+
+    galleryItems.forEach((item, idx) => {
+      const li = document.createElement('a');
+      li.href = `#img-${idx}`;
+      li.className = 'list-item';
+      li.dataset.index = idx;
+      li.innerHTML = `
+        <div class="title">${item.title}</div>
+        <div class="meta">${item.author}</div>
+        <div class="desc">${item.description}</div>
+      `;
+      listEl.appendChild(li);
+
+      const slot = document.createElement('section');
+      slot.className = 'image-slot';
+      slot.id = `img-${idx}`;
+      slot.innerHTML = `
+        <img src="${item.imageUrl}" alt="${item.title}">
+        <div class="image-caption">
+          <div>
+            <strong>${item.title}</strong><br><br>
+            ${item.description}
+          </div>
+        </div>
+      `;
+      rightEl.appendChild(slot);
+    });
+
+    const listItems = Array.from(document.querySelectorAll('.list-item'));
+    const imageSlots = Array.from(document.querySelectorAll('.image-slot'));
+
+    function setActive(i){
+      listItems.forEach((el, idx) => el.classList.toggle('active', idx===i));
+    }
+
+    if(galleryItems.length>0) setActive(0);
+
+    listEl.addEventListener('click', (e) => {
+      const a = e.target.closest('.list-item');
+      if(!a) return;
+      e.preventDefault();
+      const i = Number(a.dataset.index);
+      setActive(i);
+      document.getElementById(`img-${i}`).scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  </script>
 </body>
 </html>
