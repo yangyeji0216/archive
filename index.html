@@ -78,9 +78,32 @@
     }
     .image-slot img {
       width:100%;
-      height:auto;
-      object-fit:contain;
+      height:100%;
+      object-fit:cover;
       display:block;
+      transition: transform 0.4s;
+    }
+    .image-slot:hover img {
+      transform: scale(1.05);
+    }
+
+    /* hover caption */
+    .caption {
+      position:absolute;
+      left:0; right:0; bottom:0;
+      background:rgba(0,0,0,0.6);
+      color:white;
+      padding:10px;
+      font-size:14px;
+      opacity:0;
+      transition:opacity 0.3s;
+    }
+    .caption .caption-title {
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .image-slot:hover .caption {
+      opacity:1;
     }
 
     /* 반응형 */
@@ -153,7 +176,13 @@
       const slot = document.createElement('div');
       slot.className = 'image-slot';
       slot.id = `img-${idx}`;
-      slot.innerHTML = `<img src="${item.imageUrl}" alt="${item.title}">`;
+      slot.innerHTML = `
+        <img src="${item.imageUrl}" alt="${item.title}">
+        <div class="caption">
+          <div class="caption-title">${item.title}</div>
+          <div class="caption-desc">${item.description}</div>
+        </div>
+      `;
       rightEl.appendChild(slot);
     });
 
