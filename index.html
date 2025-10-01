@@ -12,7 +12,7 @@
 
   <style>
     :root{
-      --bg: #f9d7f0;
+      --bg: #f6cee8;
       --left-w: 380px; /* 데스크탑 왼쪽 너비 */
       --accent: #e3a6d1;
       --muted: #666;
@@ -42,7 +42,7 @@
       width:var(--left-w);
       min-width:260px;
       background:transparent;
-      padding:36px 28px;
+      padding:0px 0px;
       overflow:auto;
       border-right: 1px solid rgba(0,0,0,0.04);
     }
@@ -54,19 +54,22 @@
       letter-spacing:0.6px;
     }
     .subtitle {
+      font-family: "Chiron Sung HK", serif;
       margin:0 0 22px 0;
       color:var(--muted);
       font-size:16px;
     }
 
     .list {
+      font-family: "Chiron Sung HK", serif;
       display:flex;
       flex-direction:column;
-      gap:16px;
+      gap:0px;
     }
 
     .list-item{
-      padding:12px 14px;
+      font-family: "Chiron Sung HK", serif;
+      padding:0px 0px;
       border-radius:8px;
       cursor:pointer;
       transition: background 0.15s, transform 0.12s;
@@ -77,7 +80,7 @@
     .list-item:hover{ background: rgba(0,0,0,0.03); transform: translateY(-2px); }
     .list-item.active{
       box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-      padding-left:10px;
+      padding-left:0px;
     }
 
     .list-item .title {
@@ -152,8 +155,8 @@
         border-right: none;
         border-top:1px solid rgba(0,0,0,0.04);
       }
-      .panel-right{order:0}
-      .panel-left{order:1}
+      .panel-right{order:1}
+      .panel-left{order:0}
       .image-slot{min-height:40vh}
       .brand{ text-align:center }
     }
