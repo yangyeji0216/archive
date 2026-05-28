@@ -2,79 +2,110 @@ const artworks = document.querySelectorAll('.artwork');
 const tooltip = document.getElementById('tooltip');
 
 artworks.forEach(artwork => {
-    // 1. 무작위 위치 설정 (기존 코드 유지)
+    // 1. 무작위 위치 설정
     artwork.style.top = Math.random() * 85 + '%'; 
     artwork.style.left = Math.random() * 80 + '%'; 
 
-    // --- 드래그 앤 드롭 기능 추가 코드 ---
     let isDragging = false;
     let startX, startY;
     let initialLeft, initialTop;
 
-    artwork.addEventListener('mousedown', (e) => {
-        // 이미지 자체를 드래그하는 브라우저 기본 동작 방지
-        e.preventDefault(); 
-        
+    // --- [공통 이벤트] 드래그 시작 (PC 마우스 / 모바일 터치) ---
+    function startDrag(e) {
         isDragging = true;
-        artwork.style.cursor = 'grabbing'; // 잡은 모양 커서로 변경
+        artwork.style.cursor = 'grabbing';
 
-        // 마우스 클릭 시점의 커서 위치 저장
-        startX = e.clientX;
-        startY = e.clientY;
+        // PC(e.pageX)와 모바일(e.touches[0].pageX) 좌표 호환 처리
+        const pageX = e.pageX || e.touches[0].pageX;
+        const pageY = e.pageY || e.touches[0].pageY;
 
-        // 현재 작품의 실제 위치(px) 가져오기
-        const rect = artwork.getBoundingClientRect();
-        // 부모(.gallery)는 scroll이 되므로 scrollY를 더해 절대적인 위치 계산
-        initialLeft = rect.left + window.scrollX;
-        initialTop = rect.top + window.scrollY;
+        startX = pageX;
+        startY = pageY;
 
-        // 드래그 중에는 툴팁을 잠시 숨김
-        tooltip.style.display = 'none';
-    });
+        initialLeft = artwork.offsetLeft;
+        initialTop = artwork.offsetTop;
 
-    document.addEventListener('mousemove', (e) => {
+        // 모바일 터치 시 호버 효과(툴팁) 대용으로 사용
+        showTooltip(pageX, pageY);
+        
+        // 브라우저 기본 스크롤/터치 동작 방지 (터치 시 화면이 출렁이는 것 방지)
+        if (e.cancelable) e.preventDefault(); 
+    }
+
+    // --- [공통 이벤트] 드래그 중 ---
+    function moveDrag(e) {
         if (!isDragging) return;
 
-        // 마우스가 움직인 거리 계산
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
+        const pageX = e.pageX || (e.touches && e.touches[0].pageX);
+        const pageY = e.pageY || (e.touches && e.touches[0].pageY);
 
-        // 새로운 위치를 px 단위로 적용 (기존 % 단위에서 px 단위로 전환됨)
+        if (!pageX || !pageY) return;
+
+        const dx = pageX - startX;
+        const dy = pageY - startY;
+
         artwork.style.left = (initialLeft + dx) + 'px';
         artwork.style.top = (initialTop + dy) + 'px';
-    });
 
-    document.addEventListener('mouseup', () => {
+        // 모바일에서 드래그할 때 툴팁이 손가락을 따라다니게 함
+        showTooltip(pageX, pageY);
+    }
+
+    // --- [공통 이벤트] 드래그 종료 ---
+    function endDrag() {
         if (isDragging) {
             isDragging = false;
-            artwork.style.cursor = 'pointer'; // 원래 커서로 복구
+            artwork.style.cursor = 'pointer';
+            
+            // 모바일에서는 손을 떼면 툴팁을 바로 숨김 (호버 종료 효과)
+            if ('ontouchstart' in window) {
+                hideTooltip();
+            }
         }
-    });
-    // ------------------------------------
+    }
 
-    // 2. 마우스 오버 이벤트 (드래그 중이 아닐 때만 작동하도록 조건문 추가)
-    artwork.addEventListener('mouseover', (e) => {
-        if (isDragging) return; 
+    // --- 툴팁 표시/숨김 함수 ---
+    function showTooltip(x, y) {
         tooltip.innerText = artwork.getAttribute('data-description');
         tooltip.style.display = 'block';
-        tooltip.style.left = e.pageX + 'px';
-        tooltip.style.top = e.pageY + 'px';
-    });
+        tooltip.style.left = x + 10 + 'px'; // 손가락/커서에 가리지 않게 살짝 여백
+        tooltip.style.top = y + 10 + 'px';
+    }
 
-    // 3. 마우스 이동 이벤트 (툴팁이 마우스를 따라다님)
-    artwork.addEventListener('mousemove', (e) => {
-        if (isDragging) return;
-        tooltip.style.left = e.pageX + 10 + 'px'; 
-        tooltip.style.top = e.pageY + 10 + 'px';
-    });
-
-    // 4. 마우스 아웃 이벤트
-    artwork.addEventListener('mouseout', () => {
+    function hideTooltip() {
         tooltip.style.display = 'none';
+    }
+
+    // 2. 이벤트 리스너 연결 (환경에 맞게 하이브리드로 작동)
+    
+    // PC 마우스용 이벤트
+    artwork.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('mouseup', endDrag);
+
+    // 모바일 터치용 이벤트 (★추가)
+    artwork.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('touchmove', moveDrag, { passive: false });
+    document.addEventListener('touchend', endDrag);
+
+    // 3. PC 전용 마우스 호버 효과 (모바일에서는 무시됨)
+    artwork.addEventListener('mouseover', (e) => {
+        if (isDragging || 'ontouchstart' in window) return; 
+        showTooltip(e.pageX, e.pageY);
+    });
+
+    artwork.addEventListener('mousemove', (e) => {
+        if (isDragging || 'ontouchstart' in window) return;
+        showTooltip(e.pageX, e.pageY);
+    });
+
+    artwork.addEventListener('mouseout', () => {
+        if ('ontouchstart' in window) return;
+        hideTooltip();
     });
 });
 
-// 5. 마우스 휠 스크롤 시 배경 이미지가 움직이는 로직 (기존 코드 유지)
+// 배경 스크롤 효과
 window.addEventListener('scroll', () => {
     const background = document.querySelector('.background');
     if (!background) return;
