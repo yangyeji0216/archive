@@ -22,7 +22,6 @@ body {
     cursor: pointer;
     z-index: 2;
 }
-/* styles.css 하단에 추가 */
 .artwork.big-art img {
     /* 기존 100px 대신 적용할 더 큰 크기 */
     max-width: 250px; 
