@@ -44,3 +44,13 @@ body {
     display: none; /* 숨김 상태 */
     z-index: 3;
 }
+
+.artwork img {
+    /* 🌟 매우 중요: 이미지 자체를 마우스가 통과해 부모(.artwork)가 클릭을 인식하게 만듭니다 */
+    pointer-events: none; 
+}
+
+.tooltip {
+    /* 🌟 매우 중요: 툴팁이 마우스 커서를 가려도 드래그를 방해하지 않게 합니다 */
+    pointer-events: none; 
+}
